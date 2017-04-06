@@ -18,9 +18,22 @@ namespace wpfAPI.Controllers
         private wpfAPIContext db = new wpfAPIContext();
 
         // GET: api/Things
-        public IQueryable<Things> GetThings()
+        public HttpResponseMessage GetThings()
         {
-            return db.Things;
+            List<Things> t;
+            try
+            {
+                if ((t = db.Things.ToList()) != null)
+                {
+                    return Request.CreateResponse(HttpStatusCode.OK, t, "application/json");
+                }
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+            catch (Exception e)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+            
         }
 
         // GET: api/Things/5
